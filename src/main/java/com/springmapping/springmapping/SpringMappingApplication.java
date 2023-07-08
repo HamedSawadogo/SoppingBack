@@ -1,34 +1,41 @@
 package com.springmapping.springmapping;
-
-import com.springmapping.springmapping.entities.Categorie;
-import com.springmapping.springmapping.entities.Commentaire;
+import com.springmapping.springmapping.entities.Client;
+import com.springmapping.springmapping.entities.CommandLine;
+import com.springmapping.springmapping.entities.Commande;
 import com.springmapping.springmapping.entities.Product;
-import com.springmapping.springmapping.repository.CategorieRepository;
-import com.springmapping.springmapping.repository.CommentaireRepository;
-import com.springmapping.springmapping.repository.ProductRepository;
+import com.springmapping.springmapping.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
-@SpringBootApplication
-public class SpringMappingApplication implements CommandLineRunner {
 
+@SpringBootApplication
+@EnableSwagger2
+public class SpringMappingApplication implements CommandLineRunner{
+
+	@Autowired
+	private ClientRepository clientRepository;
 
 	@Autowired
 	private ProductRepository productRepository;
+
 	@Autowired
-	private CategorieRepository categorieRepository;
+	private CommandRepository commandRepository;
+
+	@Autowired
+	private CommandLineRepository commandLineRepository;
+
 	@Autowired
 	private CommentaireRepository commentaireRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(SpringMappingApplication.class, args);
 	}
@@ -37,69 +44,57 @@ public class SpringMappingApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		/**	Optional<Categorie> categorieOptional=this.categorieRepository.findById(4L);
-		Categorie categorie=categorieOptional.get();
+		/**Stream.of("Hamed","Ali","Jean","Kevin","Yull")
+				.forEach(nom->{
+					Client client=new Client();
+					client.setId(UUID.randomUUID().toString());
+					client.setNom(nom);
+					client.setEmail(nom+"773@gmail.com");
+					String telephone=Math.random()*0.5>0.67?"77389":"7838834";
+					client.setTelephone("+22693"+telephone);
 
-		categorie.getProduits()
-				.forEach(System.out::println);**/
+					//produit
+					Product product=new Product();
+					Double price=Math.random()*7783;
+					product.setPrix(price);
+					List<String>designations= Arrays.asList("Ampli","iphone","Pc Hp","Sac de Riz","MacBook Pro");
+					String designation=designations.get((int)(Math.random()*designations.size()));
+					product.setDesignation(designation);
+					product.setUrl("https://www.numerama.com/wp-content/uploads/2022/02/dsc00078-scaled.jpg");
+					//
+					productRepository.save(product);
+					//
+					Commande commande=new Commande();
 
-
-		/**Categorie categorie=new Categorie();
-		categorie.setNomCategorie("Alimentation");
-
-		Product product=new Product();
-		product.setDesignation("RiZ 50kg");
-		product.setPrix(25000d);
-
-		product.getCategorie();
-
-		product.setCategorie(categorie);
-		productRepository.save(product);**/
-
-
-	 /**Optional<Product> product=productRepository.findById(2L);
-
-	 Product product1=product.get();
-	 Categorie categorie=new Categorie();
-	 categorie.setNomCategorie("Ordinateur");
-
-	 Categorie categorie1=categorieRepository.save(categorie);
-
-	 if(categorie1.getProduits()==null){
-		 categorie1.setProduits(new ArrayList<>());
-	 }
-	 categorie1.getProduits().add(product1);
-
-	 Categorie categorie2=categorieRepository.save(categorie1);
-	 product1.setCategorie(categorie2);
-
-	 productRepository.save(product1);**/
+					CommandLine commandLine=new CommandLine();
+					commandLine.setProduct(product);
+					commandLine.setQuantite(2);
+					commandLine.setProduct(product);
+					commandLine.setCommande(commande);
 
 
-	 //Rechercher la categorie
-	/**Optional<Categorie>categorieOptional=categorieRepository.findById(3L);
-	Categorie categorie=categorieOptional.get();
 
-	if(categorie.getProduits()==null){
-			categorie.setProduits(new ArrayList<>());
-	}
+					commandLineRepository.save(commandLine);
 
-	//creer et Persister un Produit
-	Product product=new Product();
-	product.setDesignation("A");
-	product.setPrix(5300d);
-	Product product1=productRepository.save(product);
+					List<CommandLine>commandLines=commande.getLignesCommande();
+					commandLines.add(commandLine);
 
-	//Ajouter un Produit a la catégorie
-	//Le problème est Ici  je fais comment ?
-	 categorie.getProduits().add(product1);**/
+					commande.setLignesCommande(commandLines);
 
-	/**Product product=productRepository.findByName("Inprimante");
-		System.out.println(product.getDesignation());
-		System.out.println(product.getPrix());
-		System.out.println(product.getId());
+					commande.setClient(client);
+					commande.setDate(new Date());
+					commandRepository.save(commande);
 
-	}**/
 
+					List<Commande>commandes=client.getCommandes();
+					commandes.add(commande);
+
+					client.setCommandes(commandes);
+
+					clientRepository.save(client);
+
+				});**/
+
+		//this.commentaireRepository.deleteById(3L);
 	}
 }

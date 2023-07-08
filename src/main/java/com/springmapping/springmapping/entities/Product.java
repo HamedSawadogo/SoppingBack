@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table
 @NoArgsConstructor @AllArgsConstructor
 public class Product implements Serializable {
@@ -21,9 +23,7 @@ public class Product implements Serializable {
     /***
      * l'Image du produit
      */
-
     private String url;
-
 
     @Column(nullable = false,length = 30)
     private String designation;

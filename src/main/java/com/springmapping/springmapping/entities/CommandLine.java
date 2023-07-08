@@ -1,6 +1,4 @@
 package com.springmapping.springmapping.entities;
-
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,31 +6,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.List;
-
 @Data
 @Entity
 @DynamicUpdate
 @Table
 @NoArgsConstructor @AllArgsConstructor
-public class Categorie {
-
+public class CommandLine {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30,nullable = false,unique = true)
-    private String nomCategorie;
+    /**
+     * le produit référencé
+     */
+    @OneToOne(cascade =
+            {CascadeType.MERGE,
+            CascadeType.PERSIST})
+    private Product product;
 
-    @OneToMany(mappedBy = "categorie",cascade ={
+    /**
+     * la commande référencée
+     */
+
+    @ManyToOne(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Product> produits;
+    private Commande commande;
 
-    //ajouter un produit a la liste des produits
-    public  void addProduct(Product product){
-        this.produits.add(product);
-        product.setCategorie(this);
-    }
+    /**
+     * la quantité de ce produit
+     */
+    private int quantite;
 }

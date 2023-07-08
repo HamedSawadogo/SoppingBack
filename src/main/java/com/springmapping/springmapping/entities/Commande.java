@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -15,24 +17,33 @@ import java.util.List;
 @DynamicUpdate
 @Table
 @NoArgsConstructor @AllArgsConstructor
-public class Categorie {
+public class Commande {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30,nullable = false,unique = true)
-    private String nomCategorie;
+    /**
+     * les lignes de commandes  asccociés a cette commande
+     */
+    @OneToMany(mappedBy = "commande",cascade = CascadeType.ALL)
+    private List<CommandLine>lignesCommande=new ArrayList<>();
 
-    @OneToMany(mappedBy = "categorie",cascade ={
+    /**
+     * la date de la commande
+     */
+    @Column(name = "date_commande")
+    private Date date;
+
+    /**
+     * le Client propiétaire de la commande
+     */
+    @ManyToOne(cascade ={
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<Product> produits;
+    private  Client client;
 
-    //ajouter un produit a la liste des produits
-    public  void addProduct(Product product){
-        this.produits.add(product);
-        product.setCategorie(this);
-    }
+
 }
+

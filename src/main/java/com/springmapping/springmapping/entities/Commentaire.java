@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Date;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table
 @NoArgsConstructor @AllArgsConstructor
 public class Commentaire {
@@ -32,7 +34,7 @@ public class Commentaire {
     /**
      * le produit cible du Commentaire
      */
-    @ManyToOne(cascade = {
+    @ManyToOne(cascade ={
             CascadeType.MERGE,
             CascadeType.PERSIST
     })
