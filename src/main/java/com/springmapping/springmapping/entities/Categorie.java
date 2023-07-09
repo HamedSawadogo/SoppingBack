@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,6 +33,9 @@ public class Categorie {
 
     //ajouter un produit a la liste des produits
     public  void addProduct(Product product){
+        if(produits==null){
+            produits=new ArrayList<>();
+        }
         this.produits.add(product);
         product.setCategorie(this);
     }
