@@ -28,4 +28,9 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Commande> commandes=new ArrayList<>();
+
+    public  void addCommande(Commande commande){
+        this.commandes.add(commande);
+        commande.setClient(this);
+    }
 }
