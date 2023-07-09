@@ -7,9 +7,9 @@ public interface IMetier<T,ID>{
     T findEntityByid(ID id) throws Exception;
     List<T>getEntities();
     void deleteEntityById(ID id) throws Exception;
-    T saveEntity(T entity) throws ProductNotFoundExecption;
+    T saveEntity(T entity) throws Exception;
     List<T>findAllByName(String name);
-    void updateEntity(ID id,T entity) throws ProductNotFoundExecption;
+    void updateEntity(ID id,T entity) throws Exception;
     T findByName(String name);
 
 }
